@@ -14,7 +14,9 @@
 ## [PROBLEM 1] - 150 points
 ## Below is code for one of the simplest possible Flask applications. Edit the code so that once you run this application locally and go to the URL 'http://localhost:5000/class', you see a page that says "Welcome to SI 364!"
 
-from flask import Flask
+from flask import Flask, request
+import requests
+
 app = Flask(__name__)
 app.debug = True
 
@@ -22,9 +24,9 @@ app.debug = True
 def hello_to_you():
     return 'Hello!'
 
-
-if __name__ == '__main__':
-    app.run()
+@app.route('/class')
+def welcome_to_you():
+    return 'Welcome to SI364!'
 
 
 ## [PROBLEM 2] - 250 points
@@ -34,7 +36,17 @@ if __name__ == '__main__':
 #  "resultCount":0,
 #  "results": []
 # }
+@app.route('/movie/<movie_name>', methods= ['POST','GET'])
+def get_movie_info(movie_name):
+	#unqiue_identifier = "itunes_{}".format(movie_name)
+	url = "https://itunes.apple.com/search?term="+movie_name
+	if request.method == 'GET':
+		info = requests.get(url)
+		return info.text
 
+
+if __name__ == '__main__':
+    app.run()
 
 ## You should use the iTunes Search API to get that data.
 ## Docs for that API are here: https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
